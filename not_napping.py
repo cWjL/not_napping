@@ -79,21 +79,21 @@ def main():
 	args = parser.parse_args()
 
 	prefixes = []
-	prefixes.append("[{}*{}] ".format(FontColors.CGRN,FontColors.CEND))
-	prefixes.append("[{}!{}] ".format(FontColors.CRED,FontColors.CEND))
-	prefixes.append("[{}*{}] ".format(FontColors.CYLW,FontColors.CEND))
+	prefixes.append(f"[{FontColors.CGRN}*{FontColors.CEND}] ")
+	prefixes.append(f"[{FontColors.CRED}!{FontColors.CEND}] ")
+	prefixes.append(f"[{FontColors.CYLW}*{FontColors.CEND}] ")
 
 	try:
 		if args.max is not None:
-			print("{}Enter <CTRL+c> to exit".format(prefixes[0]))
+			print(f"{prefixes[0]}Enter <CTRL+c> to exit")
 			if args.mouse and not args.type:
 				_move_mouse(prefixes, args)
 			elif args.type and not args.mouse:
 				_type_garbage(prefixes, args)
 		else:
-			print("{}No interval provided".format(prefixes[1]))
+			print(f"{prefixes[1]}No interval provided")
 	except KeyboardInterrupt:
-		print("{}Exiting...".format(prefixes[2]))
+		print(f"{prefixes[2]}Exiting...")
 
 	return
 
@@ -107,9 +107,8 @@ def _move_mouse(prefixes, args):
 	_R = 20
 	_MAX_ROTATION = 1080
 	_MAX = int(args.max)
-	print("{}Starting mouse action.".format(prefixes[0]))
-	print("{}I will make {} mouse rotations, delaying {} seconds max."
-		.format(prefixes[0], str(int(_MAX_ROTATION/360)),str(_MAX)))
+	print(f"{prefixes[0]}Starting mouse action.")
+	print(f"{prefixes[0]}I will make {str(int(_MAX_ROTATION/360))} mouse rotations, delaying {str(_MAX)} seconds max.")
 
 	# Get screen size
 	(x,y) = pyautogui.size()
@@ -155,9 +154,8 @@ def _type_garbage(prefixes, args):
 	_MAX = int(args.max)
 	_letters = string.ascii_lowercase
 
-	print("{}Starting typing action.".format(prefixes[0]))
-	print("{}I will create a window and type garbage into it, delaying {} seconds max."
-		.format(prefixes[0],str(args.max)))
+	print(f"{prefixes[0]}Starting typing action.")
+	print(f"{prefixes[0]}I will create a window and type garbage into it, delaying {str(args.max)} seconds max.")
 
 	print("1")
 	_window_worker = M_Window()
@@ -263,15 +261,14 @@ class FontColors:
 	Terminal colors
 	'''
 	def __init__(self):
-		pass
-	CCYN = '\033[96m'
-	CRED = '\033[31m'
-	CGRN = '\033[92m'
-	CYLW = '\033[93m'
-	CBLU = '\033[94m'
-	CPRP = '\033[95m'
-	CEND = '\033[0m'
-	CFON = '\33[5m'
+		self.CCYN = '\033[96m'
+		self.CRED = '\033[31m'
+		self.CGRN = '\033[92m'
+		self.CYLW = '\033[93m'
+		self.CBLU = '\033[94m'
+		self.CPRP = '\033[95m'
+		self.CEND = '\033[0m'
+		self.CFON = '\33[5m'
 
 if __name__ == "__main__":
 	main()
