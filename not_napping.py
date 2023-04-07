@@ -78,10 +78,12 @@ def main():
 		)
 	args = parser.parse_args()
 
+	_fc = FontColors()
+
 	prefixes = []
-	prefixes.append(f"[{FontColors.CGRN}*{FontColors.CEND}] ")
-	prefixes.append(f"[{FontColors.CRED}!{FontColors.CEND}] ")
-	prefixes.append(f"[{FontColors.CYLW}*{FontColors.CEND}] ")
+	prefixes.append(f"[{_fc.CGRN}*{_fc.CEND}] ")
+	prefixes.append(f"[{_fc.CRED}!{_fc.CEND}] ")
+	prefixes.append(f"[{_fc.CYLW}*{_fc.CEND}] ")
 
 	try:
 		if args.max is not None:
@@ -90,6 +92,10 @@ def main():
 				_move_mouse(prefixes, args)
 			elif args.type and not args.mouse:
 				_type_garbage(prefixes, args)
+			elif not args.type and not args.mouse:
+				print(f"{prefixes[1]}You must select an option")
+				parser.print_help()
+				return
 		else:
 			print(f"{prefixes[1]}No interval provided")
 	except KeyboardInterrupt:
