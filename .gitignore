@@ -156,3 +156,6 @@ cython_debug/
 .DS_Store
 logs/
 not_napping_text.txt
+notes.txt
+vi_aggregator.py
+
