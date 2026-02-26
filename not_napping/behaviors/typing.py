@@ -40,8 +40,7 @@ class TypingBehavior(BaseBehavior):
     def _open_editor(self):
         """Create the typing pad file and open it in the platform's text editor."""
         SCRATCH_DIR.mkdir(parents=True, exist_ok=True)
-        if not TYPING_PAD.exists():
-            TYPING_PAD.touch()
+        TYPING_PAD.write_text("")
 
         if IS_MACOS:
             subprocess.Popen(["open", "-a", "TextEdit", str(TYPING_PAD)])
