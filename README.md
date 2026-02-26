@@ -72,8 +72,13 @@ Your OS may require you to grant accessibility/input control permissions before 
 
 If you see errors about input control or the mouse/keyboard not responding, check these permissions first.
 
+## Process disguise
+
+The process automatically masks itself in Activity Monitor / task managers. After startup it renames itself to `python3` and clears its command-line arguments, so it looks like any other Python script — no `not_napping` visible anywhere in the process list.
+
 ## Requirements
 
 - Python 3.8+
 - pyautogui >= 0.9.53
+- setproctitle >= 1.3
 - macOS, Linux, or Windows (not WSL)

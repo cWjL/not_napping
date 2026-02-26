@@ -9,6 +9,16 @@ from . import output
 from .scheduler import Scheduler
 
 
+def _cloak_process():
+    """Replace the visible process name and arguments with something generic."""
+    try:
+        import setproctitle
+        setproctitle.setproctitle("python3")
+    except ImportError:
+        pass
+    sys.argv = ["python3"]
+
+
 def _build_parser():
     parser = argparse.ArgumentParser(
         prog="not-napping",
@@ -98,6 +108,8 @@ def main():
 
     parser = _build_parser()
     args = parser.parse_args()
+
+    _cloak_process()
 
     if args.max_delay <= 0:
         output.err("Max delay must be a positive integer.")
