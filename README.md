@@ -17,7 +17,15 @@ Activity follows burst/lull timing patterns that mimic real human work rhythms.
 ## Install
 
 ```bash
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -e .
+```
+
+When opening a new terminal, activate the venv first:
+
+```bash
+source .venv/bin/activate
 ```
 
 ## Usage
