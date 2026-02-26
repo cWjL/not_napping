@@ -49,6 +49,14 @@ class TypingBehavior(BaseBehavior):
         elif IS_LINUX:
             subprocess.Popen(["xdg-open", str(TYPING_PAD)])
 
+    def _release_modifiers(self):
+        """Release all modifier keys to prevent accidental shortcuts (e.g. emoji picker)."""
+        for key in ("command", "ctrl", "shift", "alt", "option", "fn"):
+            try:
+                pyautogui.keyUp(key)
+            except Exception:
+                pass
+
     def _focus_editor(self):
         """Bring the editor window to the front before typing."""
         if IS_MACOS:
@@ -62,6 +70,10 @@ class TypingBehavior(BaseBehavior):
             subprocess.Popen(["xdg-open", str(TYPING_PAD)])
         # Give the OS a moment to bring the window forward
         time.sleep(0.5)
+        # Dismiss any open popups (e.g. emoji picker) and reset modifier state
+        self._release_modifiers()
+        pyautogui.press("escape")
+        time.sleep(0.05)
 
     def _type_char(self, char):
         """Type a single character with realistic delay."""
@@ -95,6 +107,8 @@ class TypingBehavior(BaseBehavior):
             pyautogui.hotkey("shift", "left")
             time.sleep(jitter(0.01))
 
+        # Release modifiers after hotkey loop to prevent stuck keys
+        self._release_modifiers()
         time.sleep(jitter(0.2))
         # Delete selection
         pyautogui.press("backspace")
