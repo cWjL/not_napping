@@ -154,6 +154,7 @@ cython_debug/
 
 # Misc
 .DS_Store
+CLAUDE.md
 logs/
 not_napping_text.txt
 notes.txt
