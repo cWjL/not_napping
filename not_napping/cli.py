@@ -39,6 +39,12 @@ def _build_parser():
         help="Print each action as it happens",
     )
     parser.add_argument(
+        "--no-auto-cancel",
+        action="store_true",
+        default=False,
+        help="Disable auto-cancel on real user input",
+    )
+    parser.add_argument(
         "--no-mouse",
         action="store_true",
         default=False,
@@ -124,7 +130,11 @@ def main():
     output.ok(f"Behaviors: {names}")
     output.ok(f"Max delay: {args.max_delay}s")
 
-    scheduler = Scheduler(behaviors, args.max_delay, verbose=args.verbose)
+    scheduler = Scheduler(
+        behaviors, args.max_delay,
+        verbose=args.verbose,
+        auto_cancel=not args.no_auto_cancel,
+    )
 
     try:
         scheduler.run()

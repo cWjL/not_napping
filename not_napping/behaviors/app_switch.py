@@ -1,6 +1,7 @@
 """Cmd-Tab / Alt-Tab window switching."""
 
 import random
+import subprocess
 import time
 
 import pyautogui
@@ -30,20 +31,47 @@ class AppSwitchBehavior(BaseBehavior):
         elif roll < 0.90:
             # Hold modifier, tab 2-4 times (browsing windows)
             num_tabs = random.randint(2, 4)
-            pyautogui.keyDown(self.modifier)
-            time.sleep(jitter(0.1))
-            for i in range(num_tabs):
-                pyautogui.press("tab")
-                time.sleep(jitter(random.uniform(0.3, 0.8)))
-            pyautogui.keyUp(self.modifier)
+            if IS_MACOS:
+                # pyautogui.keyDown/keyUp for modifier keys is unreliable
+                # on macOS — the Quartz backend doesn't carry modifier state
+                # to subsequent key events.  osascript handles this correctly.
+                script_lines = [
+                    'tell application "System Events"',
+                    '    key down command',
+                    '    delay 0.1',
+                ]
+                for _ in range(num_tabs):
+                    delay = random.uniform(0.3, 0.8)
+                    script_lines.append('    key code 48')  # Tab
+                    script_lines.append(f'    delay {delay:.2f}')
+                script_lines.extend([
+                    '    key up command',
+                    'end tell',
+                ])
+                subprocess.run(
+                    ["osascript", "-e", "\n".join(script_lines)],
+                    capture_output=True, timeout=15,
+                )
+            else:
+                try:
+                    pyautogui.keyDown(self.modifier)
+                    time.sleep(jitter(0.1))
+                    for _ in range(num_tabs):
+                        pyautogui.press("tab")
+                        time.sleep(jitter(random.uniform(0.3, 0.8)))
+                finally:
+                    pyautogui.keyUp(self.modifier)
             time.sleep(jitter(0.2))
             return f"app-switch: browsed {num_tabs} windows"
 
         else:
             # Mission control / show desktop then click back
             if IS_MACOS:
-                # Mission Control: Ctrl+Up
-                pyautogui.hotkey("ctrl", "up")
+                # pyautogui.hotkey("ctrl", "up") often fails to trigger
+                # system-level shortcuts on macOS.  Launching the app
+                # directly is more reliable.
+                subprocess.run(["open", "-a", "Mission Control"],
+                               capture_output=True)
                 time.sleep(jitter(random.uniform(1.0, 2.0)))
                 # Click roughly center to dismiss
                 screen = pyautogui.size()
