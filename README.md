@@ -43,12 +43,15 @@ not-napping -d 20 -v
 # Disable specific behaviors
 not-napping -d 30 --no-typing --no-switching
 
+# Disable auto-cancel (only stop with Ctrl+C)
+not-napping -d 30 --no-auto-cancel
+
 # Available flags
-#   --no-mouse      --no-typing     --no-scrolling
-#   --no-switching   --no-files
+#   --no-mouse        --no-typing       --no-scrolling
+#   --no-switching    --no-files        --no-auto-cancel
 ```
 
-Stop with **Ctrl+C**.
+Stop with **Ctrl+C**, or just move your mouse / press a key — the tool auto-cancels when it detects real user input.
 
 ## Heads up
 
@@ -60,13 +63,13 @@ When you start `not_napping`, it will immediately begin controlling your mouse, 
 - Apps switching via Cmd-Tab / Alt-Tab
 - Scratch files appearing in `~/.not_napping/scratch/`
 
-Make sure you're ready to step away before running it. Use **Ctrl+C** to stop at any time.
+Make sure you're ready to step away before running it. When you come back, just move your mouse or press any key and it will stop automatically. You can also use **Ctrl+C** at any time.
 
 ## Accessibility permissions
 
 Your OS may require you to grant accessibility/input control permissions before `not_napping` can operate:
 
-- **macOS** — Go to System Settings > Privacy & Security > Accessibility and enable your terminal app (e.g., Terminal, iTerm2). You may also need to allow it under Input Monitoring.
+- **macOS** — Go to System Settings > Privacy & Security > Accessibility and enable your terminal app (e.g., Terminal, iTerm2). You'll also need to allow it under **Input Monitoring** for auto-cancel to detect when you return.
 - **Linux** — On Wayland, tools like pyautogui have limited support. X11 is recommended. No special permissions are typically needed on X11.
 - **Windows** — Generally works out of the box. If running as a non-admin user and targeting elevated windows, you may need to run your terminal as Administrator.
 
@@ -80,5 +83,6 @@ The process automatically masks itself in Activity Monitor / task managers. Afte
 
 - Python 3.8+
 - pyautogui >= 0.9.53
+- pynput >= 1.7
 - setproctitle >= 1.3
 - macOS, Linux, or Windows (not WSL)
