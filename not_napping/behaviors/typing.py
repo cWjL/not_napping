@@ -1,13 +1,16 @@
 """Markov-chain typing with variable speed, typos, and corrections."""
 
 import random
+import subprocess
 import time
+from pathlib import Path
 
 import pyautogui
 
 from .base import BaseBehavior
 from ..timing import typing_delay, thinking_pause, jitter
 from ..text.markov import get_generator
+from ..platform_check import IS_MACOS, IS_WINDOWS, IS_LINUX
 
 pyautogui.PAUSE = 0
 
@@ -22,11 +25,44 @@ ADJACENT_KEYS = {
 }
 
 
+SCRATCH_DIR = Path.home() / ".not_napping" / "scratch"
+TYPING_PAD = SCRATCH_DIR / "typing_pad.txt"
+
+
 class TypingBehavior(BaseBehavior):
     name = "typing"
 
     def __init__(self):
         self.generator = get_generator()
+        self._editor_proc = None
+        self._open_editor()
+
+    def _open_editor(self):
+        """Create the typing pad file and open it in the platform's text editor."""
+        SCRATCH_DIR.mkdir(parents=True, exist_ok=True)
+        if not TYPING_PAD.exists():
+            TYPING_PAD.touch()
+
+        if IS_MACOS:
+            subprocess.Popen(["open", "-a", "TextEdit", str(TYPING_PAD)])
+        elif IS_WINDOWS:
+            self._editor_proc = subprocess.Popen(["notepad", str(TYPING_PAD)])
+        elif IS_LINUX:
+            subprocess.Popen(["xdg-open", str(TYPING_PAD)])
+
+    def _focus_editor(self):
+        """Bring the editor window to the front before typing."""
+        if IS_MACOS:
+            subprocess.Popen(["open", "-a", "TextEdit", str(TYPING_PAD)])
+        elif IS_WINDOWS:
+            subprocess.Popen([
+                "powershell", "-command",
+                '(New-Object -ComObject WScript.Shell).AppActivate("typing_pad")',
+            ])
+        elif IS_LINUX:
+            subprocess.Popen(["xdg-open", str(TYPING_PAD)])
+        # Give the OS a moment to bring the window forward
+        time.sleep(0.5)
 
     def _type_char(self, char):
         """Type a single character with realistic delay."""
@@ -72,6 +108,8 @@ class TypingBehavior(BaseBehavior):
             time.sleep(typing_delay())
 
     def perform(self):
+        self._focus_editor()
+
         # Generate a short burst of text (5-20 words)
         num_words = random.randint(5, 20)
         text = self.generator.generate(num_words)

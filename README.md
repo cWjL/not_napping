@@ -50,6 +50,28 @@ not-napping -d 30 --no-typing --no-switching
 
 Stop with **Ctrl+C**.
 
+## Heads up
+
+When you start `not_napping`, it will immediately begin controlling your mouse, keyboard, and switching between windows. **Don't be alarmed** — this is expected behavior. You'll see:
+
+- Your mouse cursor moving on its own
+- A TextEdit (macOS), Notepad (Windows), or default text editor window open and receive typed text
+- Random scrolling in the active window
+- Apps switching via Cmd-Tab / Alt-Tab
+- Scratch files appearing in `~/.not_napping/scratch/`
+
+Make sure you're ready to step away before running it. Use **Ctrl+C** to stop at any time.
+
+## Accessibility permissions
+
+Your OS may require you to grant accessibility/input control permissions before `not_napping` can operate:
+
+- **macOS** — Go to System Settings > Privacy & Security > Accessibility and enable your terminal app (e.g., Terminal, iTerm2). You may also need to allow it under Input Monitoring.
+- **Linux** — On Wayland, tools like pyautogui have limited support. X11 is recommended. No special permissions are typically needed on X11.
+- **Windows** — Generally works out of the box. If running as a non-admin user and targeting elevated windows, you may need to run your terminal as Administrator.
+
+If you see errors about input control or the mouse/keyboard not responding, check these permissions first.
+
 ## Requirements
 
 - Python 3.8+
